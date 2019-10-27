@@ -25,7 +25,7 @@ const Statistics = (props) => {
     const average = (props.good - props.bad) / totalVotes
     const positive = props.good / totalVotes
 
-    if(totalVotes == 0) {
+    if(totalVotes === 0) {
         return (
             <div>
                 <h2>Statistics</h2>
@@ -37,20 +37,33 @@ const Statistics = (props) => {
         // TODO MAKE A TABLE 
     return (
         <div>
-            <h2>Statistics</h2>
-            <Statistic label="Good" stat={props.good}/>
-            <Statistic label="Neutral" stat={props.neutral}/>
-            <Statistic label="Bad" stat={props.bad}/>
-            <Statistic label="All" stat={totalVotes}/>
-            <Statistic label="Average" stat={average}/>
-            <Statistic label="Positive" stat={positive}/>
+            <table>
+                <thead>
+                    <tr><td><h2>Statistics</h2></td></tr>
+                </thead>
+                <tbody>
+                    <Statistic label="Good" stat={props.good}/>
+                    <Statistic label="Neutral" stat={props.neutral}/>
+                    <Statistic label="Bad" stat={props.bad}/>
+                    <Statistic label="All" stat={totalVotes}/>
+                    <Statistic label="Average" stat={average}/>
+                    <Statistic label="Positive" stat={positive}/>
+                </tbody>
+            </table>
         </div>
     )
 }
 
 const Statistic = (props) => {      
     return (
-        <p>{props.label}: {props.stat}</p>
+        <tr>
+            <td>
+                {props.label}
+            </td>
+            <td>
+                {props.stat}
+            </td>
+        </tr>
     )
 }
 
