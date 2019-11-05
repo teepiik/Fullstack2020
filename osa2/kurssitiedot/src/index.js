@@ -30,21 +30,21 @@ const App = () => {
             ]
         }, 
         {
-          name: 'Node.js',
-          parts: [
-            {
-              name: 'Routing',
-              exercises: 3,
-              id: 1
-            },
-            {
-              name: 'Middlewares',
-              exercises: 7,
-              id: 2
-            }
-          ]
+            name: 'Node.js',
+            parts: [
+                {
+                  name: 'Routing',
+                  exercises: 3,
+                  id: 1
+                },
+                {
+                  name: 'Middlewares',
+                  exercises: 7,
+                  id: 2
+                }
+            ]
         }
-      ]
+    ]
 
     const courseLines = () => courses.map( course => <Course key={course.name} course = {course}/>)
     
