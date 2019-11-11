@@ -1,21 +1,24 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
+import axios from 'axios'
 import Form from './Components/Form'
 import PersonListing from './Components/PersonListing'
 import Filter from './Components/Filter'
 
 const App = () => {
-    const [persons, setPersons] = useState([
-        { name: 'Arto Hellas',
-        number: '040123456' },
-        { name: 'Ronaldo',
-        number: '040123456' },
-        { name: 'Harry Kane',
-        number: '040123456' }
-    ])
-
+    const [ persons, setPersons ] = useState([''])
     const [ newName, setNewName ] = useState('')
     const [ newNumber, setNewNumber ] = useState('')
     const [ filter, setFilter ] = useState('')
+
+    const hook = () => {
+        axios
+            .get('http://localhost:3001/persons')
+            .then(response => {
+                setPersons(response.data)
+            })
+    }
+
+    useEffect(hook, []) // NOTE empty array means that effect is only activated on first render.
   
     const handleNameChange = (event) => {
         setNewName(event.target.value)
@@ -44,6 +47,11 @@ const App = () => {
         }
         setNewName('')
         setNewNumber('')
+    }
+    if(persons=='') {
+        return (
+            <div>Loading</div>
+        )
     }
 
     return (
