@@ -1,16 +1,19 @@
 import React, { useState, useEffect } from 'react'
-import axios from 'axios'
 import Form from './Components/Form'
 import PersonListing from './Components/PersonListing'
 import Filter from './Components/Filter'
 import personService from './Services/personService'
+import Notification from './Components/Notification'
+import Error from './Components/Error'
+import './app.css'
 
 const App = () => {
     const [ persons, setPersons ] = useState([''])
     const [ newName, setNewName ] = useState('')
     const [ newNumber, setNewNumber ] = useState('')
     const [ filter, setFilter ] = useState('')
-    const [ nextId, setNextId ] = useState(10)
+    const [ message, setMessage] = useState(null)
+    const [ error, setError] = useState(null)
 
     const hook = () => {
         personService
@@ -37,37 +40,58 @@ const App = () => {
         const personObject = {
             name: newName,
             number: newNumber,
-            id: nextId
+            id: Math.floor(Math.random() * 100000000)
         }
-        setNextId(nextId + 1)
 
-        const names = persons.map(person => person.name)
-        if(names.includes(newName)) {
-            const result = window.confirm('Phonebook already contains that person. Would you like to update that number?')
-            if(result) {
-                const updatable = persons.find(person => person.name == newName)
-                updatable.number = newNumber
+        try {
+            const names = persons.map(person => person.name)
+            if(names.includes(newName)) {
+                const result = window.confirm('Phonebook already contains that person. Would you like to update that number?')
+                if(result) {
+                    const updatable = persons.find(person => person.name == newName)
+                    updatable.number = newNumber
+                    personService
+                        .update(updatable.id, updatable)
+                        .then(setMessage(`'${personObject.name}' was added.`))
+                        setTimeout(() => {
+                            setMessage(null)
+                          }, 5000)
+                }
+            } else {
                 personService
-                    .update(updatable.id, updatable)
-                    .then(alert("Person updated."))
+                    .create(personObject)
+                    .then(setPersons(persons.concat(personObject)))
+                    
+                setMessage(`'${personObject.name}' was added.`)
+                setTimeout(() => {
+                  setMessage(null)
+                }, 5000)
             }
-        } else {
-            personService
-                .create(personObject)
-                .then(response => {
-                    setPersons(persons.concat(personObject))
-                })
-        }
-        setNewName('')
-        setNewNumber('')
+            setNewName('')
+            setNewNumber('')
+
+        } catch(error) {
+            setError('Oops we did a doopsie')
+              setTimeout(() => {
+                setMessage(null)
+              }, 5000)
+        }  
     }
 
     const deletePerson = (id) => {
         const result = window.confirm("Confirm delete")
-        if(result) {
-            personService.destroy(id)
-                .then(setPersons(persons.filter(person => person.id !== id)))
-        }    
+        try {
+            if(result) {
+                personService.destroy(id)
+                    .then(setPersons(persons.filter(person => person.id !== id)))
+            }
+
+        } catch(error) {
+            setError('Error happened with delete.')
+              setTimeout(() => {
+                setMessage(null)
+              }, 5000)
+        }  
     }
 
     if(persons=='') {
@@ -78,6 +102,8 @@ const App = () => {
 
     return (
         <div>
+            <Notification message={message}/>
+            <Error message={error}/>
             <Filter handleFilterChange={handleFilterChange} />
             <Form newName={newName} newNumber={newNumber} handleNameChange={handleNameChange}
             handleNumberChange={handleNumberChange} addNewPerson={addNewPerson}/> 
