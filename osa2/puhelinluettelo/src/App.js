@@ -3,19 +3,19 @@ import axios from 'axios'
 import Form from './Components/Form'
 import PersonListing from './Components/PersonListing'
 import Filter from './Components/Filter'
+import personService from './Services/personService'
 
 const App = () => {
     const [ persons, setPersons ] = useState([''])
     const [ newName, setNewName ] = useState('')
     const [ newNumber, setNewNumber ] = useState('')
     const [ filter, setFilter ] = useState('')
+    const [ nextId, setNextId ] = useState(10)
 
     const hook = () => {
-        axios
-            .get('http://localhost:3001/persons')
-            .then(response => {
-                setPersons(response.data)
-            })
+        personService
+            .getAll()
+            .then(persons => setPersons(persons))
     }
 
     useEffect(hook, []) // NOTE empty array means that effect is only activated on first render.
@@ -36,18 +36,40 @@ const App = () => {
         event.preventDefault()
         const personObject = {
             name: newName,
-            number: newNumber
+            number: newNumber,
+            id: nextId
         }
+        setNextId(nextId + 1)
 
         const names = persons.map(person => person.name)
         if(names.includes(newName)) {
-            alert('Phonebook contains that name. New person not added.')
+            const result = window.confirm('Phonebook already contains that person. Would you like to update that number?')
+            if(result) {
+                const updatable = persons.find(person => person.name == newName)
+                updatable.number = newNumber
+                personService
+                    .update(updatable.id, updatable)
+                    .then(alert("Person updated."))
+            }
         } else {
-            setPersons(persons.concat(personObject))
+            personService
+                .create(personObject)
+                .then(response => {
+                    setPersons(persons.concat(personObject))
+                })
         }
         setNewName('')
         setNewNumber('')
     }
+
+    const deletePerson = (id) => {
+        const result = window.confirm("Confirm delete")
+        if(result) {
+            personService.destroy(id)
+                .then(setPersons(persons.filter(person => person.id !== id)))
+        }    
+    }
+
     if(persons=='') {
         return (
             <div>Loading</div>
@@ -59,7 +81,7 @@ const App = () => {
             <Filter handleFilterChange={handleFilterChange} />
             <Form newName={newName} newNumber={newNumber} handleNameChange={handleNameChange}
             handleNumberChange={handleNumberChange} addNewPerson={addNewPerson}/> 
-            <PersonListing persons={persons} filter={filter}/>
+            <PersonListing persons={persons} filter={filter} deletePerson={deletePerson}/>
         </div>
     )
 }
