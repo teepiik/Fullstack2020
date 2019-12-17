@@ -40,7 +40,6 @@ const App = () => {
         const personObject = {
             name: newName,
             number: newNumber,
-            id: Math.floor(Math.random() * 100000000)
         }
 
         try {
@@ -52,7 +51,7 @@ const App = () => {
                     updatable.number = newNumber
                     personService
                         .update(updatable.id, updatable)
-                        .then(setMessage(`'${personObject.name}' was added.`))
+                        .then(setMessage(`'${personObject.name}' was updated.`))
                         setTimeout(() => {
                             setMessage(null)
                           }, 5000)
@@ -60,9 +59,8 @@ const App = () => {
             } else {
                 personService
                     .create(personObject)
-                    .then(setPersons(persons.concat(personObject)))
-                    
-                setMessage(`'${personObject.name}' was added.`)
+                    .then(hook())
+                setMessage(`'${personObject.name}' was added.`)    
                 setTimeout(() => {
                   setMessage(null)
                 }, 5000)
