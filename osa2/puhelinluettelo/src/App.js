@@ -60,7 +60,13 @@ const App = () => {
                 personService
                     .create(personObject)
                     .then(hook())
-                setMessage(`'${personObject.name}' was added.`)    
+                    .catch(error => {
+                        console.log(error.response.data)
+                        setMessage(`${error.response.data.error}`)
+                    })
+                if(message === null) {
+                    setMessage(`${personObject.name} was added.`)
+                }      
                 setTimeout(() => {
                   setMessage(null)
                 }, 5000)
