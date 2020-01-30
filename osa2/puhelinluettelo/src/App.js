@@ -52,8 +52,12 @@ const App = () => {
                     personService
                         .update(updatable.id, updatable)
                         .then(setMessage(`'${personObject.name}' was updated.`))
+                        .catch(error => {
+                            setError(`${error}`)
+                        })
                         setTimeout(() => {
                             setMessage(null)
+                            setError(null)
                           }, 5000)
                 }
             } else {
@@ -62,13 +66,14 @@ const App = () => {
                     .then(hook())
                     .catch(error => {
                         console.log(error.response.data)
-                        setMessage(`${error.response.data.error}`)
+                        setError(`${error.response.data.error}`)
                     })
                 if(message === null) {
                     setMessage(`${personObject.name} was added.`)
                 }      
                 setTimeout(() => {
                   setMessage(null)
+                  setError(null)
                 }, 5000)
             }
             setNewName('')
@@ -77,7 +82,7 @@ const App = () => {
         } catch(error) {
             setError('Oops we did a doopsie')
               setTimeout(() => {
-                setMessage(null)
+                setError(null)
               }, 5000)
         }  
     }
