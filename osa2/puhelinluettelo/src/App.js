@@ -41,7 +41,7 @@ const App = () => {
             name: newName,
             number: newNumber,
         }
-
+        
         try {
             const names = persons.map(person => person.name)
             if(names.includes(newName)) {
@@ -51,6 +51,9 @@ const App = () => {
                     updatable.number = newNumber
                     personService
                         .update(updatable.id, updatable)
+                        .then(returned => {
+                            setPersons(persons.map(person => person.id !== returned.id ? person : returned))
+                        })
                         .then(setMessage(`'${personObject.name}' was updated.`))
                         .catch(error => {
                             setError(`${error}`)
@@ -63,7 +66,7 @@ const App = () => {
             } else {
                 personService
                     .create(personObject)
-                    .then(hook())
+                    .then(returned => setPersons(persons.concat(returned)))
                     .catch(error => {
                         console.log(error.response.data)
                         setError(`${error.response.data.error}`)
