@@ -10,6 +10,7 @@ This repository is for exercise submissions for University of Helsinki's Full St
 ## My course stats
 Table below tracks my submission (done) and the course total (max) exercises.
 |Part|Done|Max|
+|----|----|---|
 |osa0|6|6|
 |osa1|14|14|
 |osa2|19|20|
