@@ -15,7 +15,7 @@ Table below tracks my submission (done) and the course total (max) exercises.
 |osa0|6|6|
 |osa1|14|14|
 |osa2|19|20|
-|osa3|x|x|
+|osa3|22|22|
 |osa4|x|x|
 |osa5|x|x|
 |osa6|x|x|
