@@ -1,24 +1,28 @@
 import React from 'react'
 import { Form, Button, Row, Col } from 'react-bootstrap'
 
-const Login = (props) => {
+const BlogForm = (props) => {
     return (
         <div>
-            <h2>Login</h2>
+            <h4>New Blog</h4>
             <Row>
                 <Col>
                     <Form onSubmit={props.handleLogin}>
                         <Form.Group>
-                            <Form.Label>Username: </Form.Label>
+                            <Form.Label>Title: </Form.Label>
                             <Form.Control
-                                {...props.username}
+                                {...props.title}
                             />
-                            <Form.Label>Password: </Form.Label>
+                            <Form.Label>Author: </Form.Label>
                             <Form.Control
-                                {...props.password}
+                                {...props.author}
+                            />
+                            <Form.Label>Url: </Form.Label>
+                            <Form.Control
+                                {...props.url}
                             />
                             <Button className='button' variant='dark' type='submit'>
-                                login
+                                Create
                             </Button>
                         </Form.Group>
                     </Form>
@@ -29,4 +33,4 @@ const Login = (props) => {
     )
 }
 
-export default Login
+export default BlogForm

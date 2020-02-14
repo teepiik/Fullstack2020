@@ -9,10 +9,29 @@ import './App.css'
 
 const App = () => {
     const [blogs, setBlogs] = useState([''])
-    const [username, setUsername] = useState('')
-    const [password, setPassword] = useState('')
     const [message, setMessage] = useState(null)
     const [user, setUser] = useState(null)
+
+    // Custon Hook for form fields.
+    const useField = (type) => {
+        const [value, setValue] = useState('')
+
+        const onChange = (event) => {
+            setValue(event.target.value)
+        }
+
+        const setEmpty = () => {
+            setValue('')
+        }
+
+        return {
+            setEmpty: setEmpty,
+            field: { type, value, onChange }
+        }
+    }
+    // Form field states
+    const username = useField('text')
+    const password = useField('password')
 
     useEffect(() => {
         const fetchData = async () => {
@@ -33,15 +52,15 @@ const App = () => {
     const handleLogin = async (event) => {
         event.preventDefault()
         try {
-            const user = await loginService.login({ username, password })
+            const user = await loginService.login({ username:username.field.value, password:password.field.value })
             window.localStorage.setItem('loggedUser', JSON.stringify(user))
             setUser(user)
-            setUsername('')
-            setPassword('')
+            username.setEmpty()
+            password.setEmpty()
             setUpNotification(`Logged in as ${user.username}`)
         } catch (error) {
             setUpNotification('Login failed.')
-            setPassword('')
+            password.setEmpty()
         }
     }
 
@@ -58,23 +77,13 @@ const App = () => {
         }, 5000)
     }
 
-    const handleUsernameChange = (event) => {
-        setUsername(event.target.value)
-    }
-
-    const handlePasswordChange = (event) => {
-        setPassword(event.target.value)
-    }
-
     if(user === null) {
         return (
             <div className='container'>
                 <Notification message={message} />
                 <Login handleLogin={handleLogin}
-                    username={username}
-                    password={password}
-                    handleUsernameChange={handleUsernameChange}
-                    handlePasswordChange={handlePasswordChange}
+                    username={username.field}
+                    password={password.field}
                 />
             </div>
         )
