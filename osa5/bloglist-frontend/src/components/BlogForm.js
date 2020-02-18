@@ -7,7 +7,7 @@ const BlogForm = (props) => {
             <h4>New Blog</h4>
             <Row>
                 <Col>
-                    <Form onSubmit={props.handleLogin}>
+                    <Form onSubmit={props.handleNewBlog}>
                         <Form.Group>
                             <Form.Label>Title: </Form.Label>
                             <Form.Control

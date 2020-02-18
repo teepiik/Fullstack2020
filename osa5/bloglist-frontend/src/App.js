@@ -4,6 +4,8 @@ import blogService from './services/blogs'
 import loginService from './services/login'
 import Login from './components/Login'
 import Notification from './components/Notification'
+import Togglable from './components/Togglable'
+import BlogForm from './components/BlogForm'
 import { Button } from 'react-bootstrap'
 import './App.css'
 
@@ -32,6 +34,9 @@ const App = () => {
     // Form field states
     const username = useField('text')
     const password = useField('password')
+    const title = useField('text')
+    const author = useField('text')
+    const url = useField('text')
 
     useEffect(() => {
         const fetchData = async () => {
@@ -48,6 +53,8 @@ const App = () => {
             setUser(user)
         }
     }, [])
+
+    const blogFormRef = React.createRef()
 
     const handleLogin = async (event) => {
         event.preventDefault()
@@ -68,6 +75,30 @@ const App = () => {
         window.localStorage.clear()
         setUser(null)
         setUpNotification('Logged out')
+    }
+
+    const handleNewBlog = async (event) => {
+        event.preventDefault()
+        try {
+            const blogObject = {
+                title: title.field.value,
+                url: url.field.value,
+                author: author.field.value,
+                user: {
+                    username: user.username,
+                    name: user.name
+                },
+                likes: 0
+            }
+            blogService.setToken(user.token)
+
+            blogFormRef.current.toggleVisibility()
+            const newBlog = await blogService.create(blogObject)
+            setBlogs(blogs.concat(newBlog))
+            setUpNotification(`${newBlog.title} created!`)
+        } catch (error) {
+            setUpNotification('New blog creation failed')
+        }
     }
 
     const setUpNotification = (message) => {
@@ -95,6 +126,14 @@ const App = () => {
             <Notification message={message} />
             <p>Logged in as {user.username}</p>
             <Button variant='dark' onClick={() => handleLogout()}>logout</Button>
+            <Togglable buttonLabel='New Blog' ref={blogFormRef}>
+                <BlogForm
+                    handleNewBlog={handleNewBlog}
+                    title={title.field}
+                    author={author.field}
+                    url={url.field}
+                />
+            </Togglable>
             {blogs.map(blog =>
                 <Blog key={blog.id} blog={blog} />
             )}
