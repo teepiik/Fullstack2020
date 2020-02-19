@@ -41,7 +41,7 @@ const App = () => {
     useEffect(() => {
         const fetchData = async () => {
             const res = await blogService.getAll()
-            setBlogs(res)
+            setBlogs(res.sort((a,b) => b.likes - a.likes))
         }
         fetchData()
     }, [])
@@ -79,15 +79,12 @@ const App = () => {
 
     const handleNewBlog = async (event) => {
         event.preventDefault()
+
         try {
             const blogObject = {
                 title: title.field.value,
                 url: url.field.value,
                 author: author.field.value,
-                user: {
-                    username: user.username,
-                    name: user.name
-                },
                 likes: 0
             }
             blogService.setToken(user.token)
@@ -105,9 +102,20 @@ const App = () => {
         try {
             blog.likes += 1
             const updatedBlog = await blogService.update(blog.id, blog)
-            setBlogs(blogs.map(blog => blog.id !== updatedBlog.id ? blog : updatedBlog))
+            setBlogs(blogs.map(blog => blog.id !== updatedBlog.id ? blog : updatedBlog).sort((a,b) => b.likes - a.likes))
         } catch (error) {
             setUpNotification(error)
+        }
+    }
+
+    const handleDelete = async (blog) => {
+        try {
+            blogService.setToken(user.token)
+            await blogService.destroy(blog.id)
+            setUpNotification(`${blog.title} deleted`)
+            setBlogs(blogs.filter(b => b.id !== blog.id))
+        } catch (error) {
+            setUpNotification('Error with delete.')
         }
     }
 
@@ -150,6 +158,7 @@ const App = () => {
                     blog={blog}
                     handleLike={handleLike}
                     user={user}
+                    handleDelete={handleDelete}
                 />
             )}
         </div>
