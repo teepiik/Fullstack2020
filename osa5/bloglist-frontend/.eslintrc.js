@@ -2,7 +2,8 @@ module.exports = {
     "env": {
         "commonjs": true,
         "es6": true,
-        "browser": true
+        "browser": true,
+        "jest/globals": true
     },
     "extends": [
         "eslint:recommended",
@@ -19,6 +20,9 @@ module.exports = {
         "ecmaVersion": 2018,
         "sourceType": "module"
     },
+    "plugins": [
+        "react", "jest"
+    ],
     "rules": {
         "indent": [
             "error",
