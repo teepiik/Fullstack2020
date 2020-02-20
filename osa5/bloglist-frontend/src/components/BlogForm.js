@@ -1,5 +1,6 @@
 import React from 'react'
 import { Form, Button, Row, Col } from 'react-bootstrap'
+import PropTypes from 'prop-types'
 
 const BlogForm = (props) => {
     return (
@@ -31,6 +32,10 @@ const BlogForm = (props) => {
             </Row>
         </div>
     )
+}
+
+BlogForm.propTypes = {
+    handleNewBlog: PropTypes.func.isRequired
 }
 
 export default BlogForm
