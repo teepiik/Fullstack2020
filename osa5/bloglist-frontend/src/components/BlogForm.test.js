@@ -14,10 +14,9 @@ test('BlogForm sends correct data.', () => {
     const author = component.container.querySelector('#author')
     const url = component.container.querySelector('#url')
     const form = component.container.querySelector('#form')
-    console.log(title)
 
     fireEvent.change(title, {
-        target: { field: { value: 'What is love' } }
+        target: { value: 'What is love' }
     })
 
     fireEvent.change(author, {
@@ -32,6 +31,7 @@ test('BlogForm sends correct data.', () => {
 
     expect(createBlog.mock.calls.length).toBe(1)
     //expect(createBlog.mock.calls[0][0].content).toBe('What is love' )
-    console.log(createBlog.mock.calls)
+    //console.log(createBlog.mock.calls)
     console.log(createBlog.mock.calls[0][0].content)
+    console.log(createBlog.mock.calls[0][0])
 })

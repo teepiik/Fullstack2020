@@ -13,30 +13,11 @@ const App = () => {
     const [blogs, setBlogs] = useState([''])
     const [message, setMessage] = useState(null)
     const [user, setUser] = useState(null)
-
-    // Custon Hook for form fields.
-    const useField = (type) => {
-        const [value, setValue] = useState('')
-
-        const onChange = (event) => {
-            setValue(event.target.value)
-        }
-
-        const setEmpty = () => {
-            setValue('')
-        }
-
-        return {
-            setEmpty: setEmpty,
-            field: { type, value, onChange }
-        }
-    }
-    // Form field states
-    const username = useField('text')
-    const password = useField('password')
-    const title = useField('text')
-    const author = useField('text')
-    const url = useField('text')
+    const [username, setUsername] = useState([''])
+    const [password, setPassword] = useState([''])
+    const [title, setTitle] = useState([''])
+    const [author, setAuthor] = useState([''])
+    const [url, setUrl] = useState([''])
 
     useEffect(() => {
         const fetchData = async () => {
@@ -59,15 +40,15 @@ const App = () => {
     const handleLogin = async (event) => {
         event.preventDefault()
         try {
-            const user = await loginService.login({ username:username.field.value, password:password.field.value })
+            const user = await loginService.login({ username:username, password:password })
             window.localStorage.setItem('loggedUser', JSON.stringify(user))
             setUser(user)
-            username.setEmpty()
-            password.setEmpty()
+            setUsername('')
+            setPassword('')
             setUpNotification(`Logged in as ${user.username}`)
         } catch (error) {
             setUpNotification('Login failed.')
-            password.setEmpty()
+            setPassword('')
         }
     }
 
@@ -82,9 +63,9 @@ const App = () => {
 
         try {
             const blogObject = {
-                title: title.field.value,
-                url: url.field.value,
-                author: author.field.value,
+                title: title,
+                url: url,
+                author: author,
                 likes: 0
             }
             blogService.setToken(user.token)
@@ -119,6 +100,26 @@ const App = () => {
         }
     }
 
+    const handleUsernameChange = (event) => {
+        setUsername(event.target.value)
+    }
+
+    const handlePasswordChange = (event) => {
+        setPassword(event.target.value)
+    }
+
+    const handleTitleChange = (event) => {
+        setTitle(event.target.value)
+    }
+
+    const handleAuthorChange = (event) => {
+        setAuthor(event.target.value)
+    }
+
+    const handleUrlChange = (event) => {
+        setUrl(event.target.value)
+    }
+
     const setUpNotification = (message) => {
         setMessage(message)
         setTimeout(() => {
@@ -131,8 +132,10 @@ const App = () => {
             <div className='container'>
                 <Notification message={message} />
                 <Login handleLogin={handleLogin}
-                    username={username.field}
-                    password={password.field}
+                    username={username}
+                    password={password}
+                    handleUsernameChange={handleUsernameChange}
+                    handlePasswordChange={handlePasswordChange}
                 />
             </div>
         )
@@ -147,9 +150,12 @@ const App = () => {
             <Togglable buttonLabel='New Blog' ref={blogFormRef}>
                 <BlogForm
                     handleNewBlog={handleNewBlog}
-                    title={title.field}
-                    author={author.field}
-                    url={url.field}
+                    title={title}
+                    author={author}
+                    url={url}
+                    handleTitleChange={handleTitleChange}
+                    handleAuthorChange={handleAuthorChange}
+                    handleUrlChange={handleUrlChange}
                 />
             </Togglable>
             {blogs.map(blog =>

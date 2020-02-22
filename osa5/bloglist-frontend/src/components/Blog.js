@@ -31,7 +31,7 @@ const Blog = (props) => {
     return (
         <div>
             <h4 id='blogHeader'>{props.blog.title} by {props.blog.author}</h4>
-            <p id='blogUrl'>Url: {props.blog.url}</p><br></br>
+            <p id='blogUrl'>Url: {props.blog.url}</p>
             <p id='blogLikes'>{props.blog.likes} likes</p>
             <button onClick={() => props.handleLike(props.blog)}>like</button><br></br>
             <DeleteButton
