@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { render, fireEvent } from '@testing-library/react'
 import BlogForm from './BlogForm'
 // 5.16
@@ -10,9 +10,9 @@ test('BlogForm sends correct data.', () => {
     const [title, setTitle] = useState([''])
     const [author, setAuthor] = useState([''])
     const [url, setUrl] = useState([''])
-    */
+
     const handleTitleChange = (event) => {
-        setTitle(event.target.value)
+        //setTitle(event.target.value)
     }
 
     const handleAuthorChange = (event) => {
@@ -21,17 +21,17 @@ test('BlogForm sends correct data.', () => {
 
     const handleUrlChange = (event) => {
         setUrl(event.target.value)
-    }
+    }*/
 
     const component = render(
         <BlogForm
             handleNewBlog={createBlog}
-            title={title}
+            /*title={title}
             author={author}
             url={url}
             handleTitleChange={handleTitleChange}
             handleAuthorChange={handleAuthorChange}
-            handleUrlChange={handleUrlChange}
+            handleUrlChange={handleUrlChange}*/
         />
     )
 
