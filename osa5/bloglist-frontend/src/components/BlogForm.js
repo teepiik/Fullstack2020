@@ -8,18 +8,21 @@ const BlogForm = (props) => {
             <h4>New Blog</h4>
             <Row>
                 <Col>
-                    <Form onSubmit={props.handleNewBlog}>
+                    <Form id='form' onSubmit={props.handleNewBlog}>
                         <Form.Group>
                             <Form.Label>Title: </Form.Label>
                             <Form.Control
+                                id='title'
                                 {...props.title}
                             />
                             <Form.Label>Author: </Form.Label>
                             <Form.Control
+                                id='author'
                                 {...props.author}
                             />
                             <Form.Label>Url: </Form.Label>
                             <Form.Control
+                                id='url'
                                 {...props.url}
                             />
                             <Button className='button' variant='dark' type='submit'>
