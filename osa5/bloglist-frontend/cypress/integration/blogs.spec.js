@@ -49,7 +49,6 @@ describe('Blog app', function() {
         })
 
         it('A blog can be liked', function() {
-            //cy.createBlog({ title: 'this', author: 'tester', url: 'blabla.com' })
             cy.contains('New Blog').click()
             cy.get('#title').type('a blog created by cypress')
             cy.get('#author').type('testboy')
@@ -62,7 +61,6 @@ describe('Blog app', function() {
         })
 
         it('A blog can be deleted', function() {
-            //cy.createBlog({ title: 'forDelete', author: 'tester', url: 'blabla.com' })
             cy.contains('New Blog').click()
             cy.get('#title').type('forDelete')
             cy.get('#author').type('testboy')
@@ -72,6 +70,32 @@ describe('Blog app', function() {
             cy.contains('forDelete')
             cy.contains('delete').click()
             cy.get('forDelete').should('not.exist')
+        })
+
+        it.only('Sorts blogs according to likes', function() {
+            cy.contains('New Blog').click()
+            cy.get('#title').type('firstBlog')
+            cy.get('#author').type('testboy')
+            cy.get('#url').type('www.testingthis.com')
+            cy.contains('Create').click()
+
+            cy.contains('New Blog').click()
+            cy.get('#title').type('secondBlog')
+            cy.get('#author').type('secondBoy')
+            cy.get('#url').type('www.second.com')
+            cy.contains('Create').click()
+
+            cy.contains('show more').click()
+            cy.contains('www.testingthis.com')
+            cy.contains('show less').click()
+
+            cy.get('#showsecondBlog').click()
+            cy.contains('www.second.com')
+            cy.get('#likeButton').click()
+            cy.contains('show less').click()
+
+            cy.contains('show more').click()
+            cy.contains('www.second.com')
         })
     })
 })

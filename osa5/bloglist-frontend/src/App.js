@@ -73,6 +73,9 @@ const App = () => {
             blogFormRef.current.toggleVisibility()
             const newBlog = await blogService.create(blogObject)
             setBlogs(blogs.concat(newBlog))
+            setTitle('')
+            setAuthor('')
+            setUrl('')
             setUpNotification(`${newBlog.title} created!`)
         } catch (error) {
             setUpNotification('New blog creation failed')

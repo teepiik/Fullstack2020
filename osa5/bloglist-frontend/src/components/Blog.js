@@ -24,7 +24,7 @@ const Blog = (props) => {
         return (
             <div>
                 <p id='blogHeader'>{props.blog.title} by {props.blog.author}</p>
-                <button onClick={() => setExtended(true)}>show more</button>
+                <button id={`show${props.blog.title}`} onClick={() => setExtended(true)}>show more</button>
             </div>
         )
     }
