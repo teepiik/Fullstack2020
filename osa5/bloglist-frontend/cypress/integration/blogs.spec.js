@@ -72,7 +72,7 @@ describe('Blog app', function() {
             cy.get('forDelete').should('not.exist')
         })
 
-        it.only('Sorts blogs according to likes', function() {
+        it('Sorts blogs according to likes', function() {
             cy.contains('New Blog').click()
             cy.get('#title').type('firstBlog')
             cy.get('#author').type('testboy')
