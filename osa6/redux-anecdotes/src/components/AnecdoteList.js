@@ -3,6 +3,8 @@ import { useSelector, useDispatch } from 'react-redux'
 import { handleVote } from '../reducers/anecdoteReducer'
 import { notificationChange } from '../reducers/notificationReducer'
 
+let timeOutID = 0
+
 const AnecdoteList = () => {
     const anecdotes = useSelector(({filter, anecdotes}) => {
         if(filter === '') {
@@ -15,7 +17,7 @@ const AnecdoteList = () => {
 
     const vote = async (anecdote) => {
         dispatch(handleVote(anecdote))
-        dispatch(notificationChange(`You voted "${anecdote.content}"`, 5))
+        timeOutID = await dispatch(notificationChange(`You voted "${anecdote.content}"`, 5, timeOutID))
     }
 
     return (
