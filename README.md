@@ -9,6 +9,7 @@ This repository is for exercise submissions for University of Helsinki's Full St
 * [Part 4](https://github.com/teepiik/Fullstack2020_osa4)
 * [Part 5](https://github.com/teepiik/Fullstack2020/tree/master/osa5)
 * [Part 6](https://github.com/teepiik/Fullstack2020/tree/master/osa6)
+* [Part 7](https://github.com/teepiik/Fullstack2020/tree/master/osa7)
 ## My course stats
 Table below tracks my submissions (done) and the course total (max) exercises.
 
