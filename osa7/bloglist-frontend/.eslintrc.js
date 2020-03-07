@@ -3,12 +3,11 @@ module.exports = {
         "commonjs": true,
         "es6": true,
         "browser": true,
-        "jest/globals": true,
-        "cypress/globals": true
     },
     "extends": [
         "eslint:recommended",
-        "plugin:react/recommended"
+        "plugin:react/recommended",
+        "plugin:react-redux/recommended"
     ],
     "globals": {
         "Atomics": "readonly",
@@ -22,7 +21,8 @@ module.exports = {
         "sourceType": "module"
     },
     "plugins": [
-        "react", "jest", "cypress"
+        "react",
+        "react-redux"
     ],
     "rules": {
         "indent": [
@@ -52,6 +52,7 @@ module.exports = {
             { "before": true, "after": true}
         ],
         "eqeqeq": "error",
-        "no-trailing-spaces": "error"
+        "no-trailing-spaces": "error",
+        "no-case-declarations": "off"
     }
 };
