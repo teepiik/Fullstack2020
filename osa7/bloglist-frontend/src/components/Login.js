@@ -3,6 +3,7 @@ import { useField } from '../hooks/index'
 import { login } from '../reducers/userReducer'
 import { useDispatch } from 'react-redux'
 import { notificationChange } from '../reducers/notificationReducer'
+import { Form, Button, Row, Col } from 'react-bootstrap'
 
 let timeOutID = 0
 
@@ -26,22 +27,27 @@ const Login = () => {
 
     return (
         <div>
-            <h2>Login</h2>
-            <form onSubmit={handleLogin}>
-                <div>
-                    Username
-                    <input
-                        {...username.field}
-                    />
-                </div>
-                <div>
-                    Password
-                    <input
-                        {...password.field}
-                    />
-                </div>
-                <button type="submit" id='loginButton'>login</button>
-            </form>
+            <Row>
+                <Col>
+                    <h2>Login</h2>
+                    <Form onSubmit={handleLogin}>
+                        <Form.Group>
+                            <Form.Label>Username: </Form.Label>
+                            <Form.Control
+                                {...username.field}
+                            />
+                            <Form.Label>Password: </Form.Label>
+                            <Form.Control
+                                {...password.field}
+                            />
+                            <Button className='button' variant='dark' type='submit'>
+                                Login
+                            </Button>
+                        </Form.Group>
+                    </Form>
+                </Col>
+                <Col></Col>
+            </Row>
         </div>
     )
 }

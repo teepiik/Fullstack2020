@@ -1,26 +1,55 @@
-import React, { useState } from 'react'
+import React from 'react'
+import { useSelector, useDispatch } from 'react-redux'
+import { useRouteMatch } from 'react-router-dom'
+import { like, destroy } from '../reducers/blogReducer'
+import { notificationChange } from '../reducers/notificationReducer'
+import { Button } from 'react-bootstrap'
 
-const Blog = (props) => {
-    const [extended, setExtended] = useState(false)
+let timeOutID = 0
 
-    if(extended===false) {
+const Blog = () => {
+    const dispatch = useDispatch()
+
+    const blogs = useSelector(({ blogs }) => {
+        return blogs
+    })
+
+    try {
+        const match = useRouteMatch('/blogs/:id')
+        const blog = blogs.find(u => u.id === match.params.id)
+
+        const handleLike = async (blog) => {
+            try {
+                dispatch(like(blog))
+                timeOutID = dispatch(notificationChange(`You liked "${blog.title}"`, 5, timeOutID))
+            } catch (error) {
+                console.log(error)
+            }
+        }
+
+        const handleDelete = async (blog) => {
+            dispatch(destroy(blog.id))
+            timeOutID = dispatch(notificationChange(`You deleted "${blog.title}"`, 5, timeOutID))
+        }
+
+        if(blog==='' || blog===null || blog===undefined) {
+            return <p>blog not found</p>
+        }
+
         return (
             <div>
-                <p id='blogHeader'>{props.blog.title} by {props.blog.author}</p>
-                <button id={`show${props.blog.title}`} onClick={() => setExtended(true)}>show more</button>
+                <h3>{blog.title}</h3>
+                <p>Url: {blog.url}</p>
+                <p>This blog has {blog.likes} likes</p>
+                <Button className='button' variant='dark' onClick={() => handleLike(blog)}>Like</Button>
+                <Button className='button' variant='dark' onClick={() => handleDelete(blog)}>Delete</Button>
             </div>
         )
+
+    } catch (error) {
+        console.log(error)
+        return null
     }
-    return (
-        <div>
-            <h4 id='blogHeader'>{props.blog.title} by {props.blog.author}</h4>
-            <p id='blogUrl'>Url: {props.blog.url}</p>
-            <p id='blogLikes'>{props.blog.likes} likes</p>
-            <button onClick={() => props.handleLike(props.blog)}>like</button><br></br>
-            <button onClick={() => props.handleDelete(props.blog)}>delete</button>
-            <button onClick={() => setExtended(false)}>show less</button>
-        </div>
-    )
 }
 
 export default Blog

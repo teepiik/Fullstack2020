@@ -1,55 +1,28 @@
 import React from 'react'
-import Blog from './Blog'
-import { useSelector, useDispatch } from 'react-redux'
-import { notificationChange } from '../reducers/notificationReducer'
-import { like, destroy } from '../reducers/blogReducer'
+import { useSelector } from 'react-redux'
+import { Link } from 'react-router-dom'
 
-let timeOutID = 0
 
 const BlogListing = () => {
     const blogs = useSelector(({ blogs }) => {
         return blogs
     })
 
-    const user = useSelector(({ user }) => {
-        return user
-    })
-
-    const dispatch = useDispatch()
-
-    /* try {
-            blog.likes += 1
-            const updatedBlog = await blogService.update(blog.id, blog)
-            setBlogs(blogs.map(blog => blog.id !== updatedBlog.id ? blog : updatedBlog).sort((a,b) => b.likes - a.likes))
-        } catch (error) {
-            setUpNotification(error)
-        }*/
-
-    const handleLike = async (blog) => {
-        try {
-            dispatch(like(blog))
-            timeOutID = dispatch(notificationChange(`You liked "${blog.title}"`, 5, timeOutID))
-        } catch (error) {
-            console.log(error)
-        }
+    if(blogs==='') {
+        return null
     }
-
-    const handleDelete = async (blog) => {
-        dispatch(destroy(blog.id))
-        timeOutID = dispatch(notificationChange(`You deleted "${blog.title}"`, 5, timeOutID))
-    }
+    const rows = () =>
+        blogs.map(blog =>
+            <li key={blog.id}>
+                <Link to={`/blogs/${blog.id}`}>{blog.title}</Link>
+            </li>)
 
     return (
         <div>
-            {blogs.map(blog =>
-                <Blog
-                    key={blog.id}
-                    blog={blog}
-                    handleLike={handleLike}
-                    user={user}
-                    handleDelete={handleDelete}
-                />
-            )}
+            <h3>Blogs</h3>
+            <ul>
+                {rows()}
+            </ul>
         </div>
     )
 }
