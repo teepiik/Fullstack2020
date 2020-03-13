@@ -1,4 +1,4 @@
-export const authors = [
+exports.authors = [
     {
       name: 'Robert Martin',
       id: "afa51ab0-344d-11e9-a414-719c6709cf3e",
@@ -24,7 +24,7 @@ export const authors = [
     },
   ]
 
-  export const books = [
+  exports.books = [
     {
       title: 'Clean Code',
       published: 2008,
