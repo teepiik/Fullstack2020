@@ -17,6 +17,11 @@ const create = newObject => {
     return request.then(response => response.data)
 }
 
+const comment = (id, comment) => {
+    const request = axios.post(`${baseUrl}/${id}/comments`, { comment }, config)
+    return request.then(response => response.data)
+}
+
 const update = (id, newObject) => {
     const request = axios.put(`${baseUrl}/${id}`, newObject, config)
     return request.then(response => response.data)
@@ -27,4 +32,4 @@ const destroy = id => {
     return request.then(response => response.data)
 }
 
-export default { getAll, create, update, destroy, setToken }
+export default { getAll, create, update, destroy, setToken, comment }

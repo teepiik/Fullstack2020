@@ -4,6 +4,7 @@ import { useRouteMatch } from 'react-router-dom'
 import { like, destroy } from '../reducers/blogReducer'
 import { notificationChange } from '../reducers/notificationReducer'
 import { Button } from 'react-bootstrap'
+import Comments from './Comments'
 
 let timeOutID = 0
 
@@ -36,6 +37,12 @@ const Blog = () => {
             return <p>blog not found</p>
         }
 
+        let comments = []
+        console.log(blog)
+        if(blog.comments) {
+            comments = blog.comments
+        }
+
         return (
             <div>
                 <h3>{blog.title}</h3>
@@ -43,6 +50,7 @@ const Blog = () => {
                 <p>This blog has {blog.likes} likes</p>
                 <Button className='button' variant='dark' onClick={() => handleLike(blog)}>Like</Button>
                 <Button className='button' variant='dark' onClick={() => handleDelete(blog)}>Delete</Button>
+                <Comments id={blog.id} comments={comments}/>
             </div>
         )
 
