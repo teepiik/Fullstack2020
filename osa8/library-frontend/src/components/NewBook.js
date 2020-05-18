@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useMutation } from '@apollo/client'
-import { CREATE_BOOK, ALL_BOOKS } from '../queries'
+import { CREATE_BOOK, ALL_BOOKS, ALL_AUTHORS } from '../queries'
 
 const NewBook = (props) => {
   const [title, setTitle] = useState('')
@@ -11,9 +11,13 @@ const NewBook = (props) => {
 
 
   const [ createBook ] = useMutation(CREATE_BOOK, {
-    refetchQueries: [  {query: ALL_BOOKS} ],
+    refetchQueries: [ {query: ALL_BOOKS}, {query: ALL_AUTHORS} ],
     onError: (error) => {
-      console.log(error.graphQLErrors)
+      if(error.graphQLErrors.length > 0) {
+        props.setError(error.graphQLErrors[0].message)
+      } else {
+        console.log(error)
+      }
     }
   })
 
@@ -64,7 +68,7 @@ const NewBook = (props) => {
           <input
             type='number'
             value={published}
-            onChange={({ target }) => setPublished(target.value)}
+            onChange={({ target }) => setPublished(parseInt(target.value))} // error, not int
           />
         </div>
         <div>
