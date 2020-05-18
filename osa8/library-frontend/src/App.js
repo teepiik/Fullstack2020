@@ -45,6 +45,7 @@ const App = () => {
       <Authors
         authors={authorsData.data.allAuthors}
         show={page === 'authors'}
+        notify={notify}
       />
 
       <Books
