@@ -1,6 +1,23 @@
-const { ApolloServer, gql } = require('apollo-server')
+const { ApolloServer, UserInputError, gql } = require('apollo-server')
+const mongoose = require('mongoose')
+const Book = require('./models/book')
+const Author = require('./models/author')
 let { books, authors } = require('./data')
 const uuid = require('uuid/v1')
+
+mongoose.set('useFindAndModify', false)
+
+const MONGODB_URI = process.env.MONGODB_URI
+
+console.log('Connecting to MongoDB')
+
+mongoose.connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+    .then(() => {
+        console.log('Connected to MongoDB')
+    })
+    .catch((error) => {
+        console.log('Error connecting to MongoDB: ', error.message)
+    })
 
 const typeDefs = gql`
     type Author {
@@ -41,9 +58,11 @@ const typeDefs = gql`
 
 const resolvers = {
     Query: {
-        bookCount: () => books.length,
-        authorCount: () => authors.length,
+        bookCount: () => Book.collection.countDocuments(),
+        authorCount: () => Author.collection.countDocuments(),
         allBooks: (root, args) => {
+            /*
+            Filters Disabled
             if(args.author && args.genre) {
                 return books
                             .filter(book => book.author === args.author)
@@ -56,12 +75,13 @@ const resolvers = {
 
             if(args.genre) {
                 return books.filter(book => book.genres.includes(args.genre))
-            }
+            }*/
 
-            return books
+            return Book.find({})
         },
-        allAuthors: () => authors
+        allAuthors: () => { return Author.find({})}
     },
+    // JATKA TÄSTÄÄÄÄÄÄÄ!!!!
     Author: {
         bookCount: root => {
             return books.filter(book => book.author === root.name).length
