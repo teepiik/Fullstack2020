@@ -2,8 +2,9 @@ const { ApolloServer, UserInputError, gql } = require('apollo-server')
 const mongoose = require('mongoose')
 const Book = require('./models/book')
 const Author = require('./models/author')
-let { books, authors } = require('./data')
-const uuid = require('uuid/v1')
+require('dotenv').config()
+//let { books, authors } = require('./data')
+//const uuid = require('uuid/v1')
 
 mongoose.set('useFindAndModify', false)
 
@@ -81,30 +82,64 @@ const resolvers = {
         },
         allAuthors: () => { return Author.find({})}
     },
-    // JATKA TÄSTÄÄÄÄÄÄÄ!!!!
     Author: {
-        bookCount: root => {
-            return books.filter(book => book.author === root.name).length
+        // NOTE might be more sensible to do this on db side.
+        bookCount: async root => {
+            const resbooks = await Book.find({})
+            return resbooks.filter(book => book.author === root.name).length
         }
     },
 
     Mutation: {
-        addBook: (root, args) => {
-            if(!authors.find(a => a.name === args.author)) {
-                const newAuthor = { name: args.author, born: null, id: uuid()}
-                authors = authors.concat(newAuthor)
+        addBook: async (root, args) => {
+            try {
+                const author = await Author.findOne({ name: args.author })
+                console.log(author)
+                if(author === null || author === undefined) {
+                    const newAuthor = new Author({ name: args.author, born: null })
+                    savedAuthor = await newAuthor.save()
+                    console.log('tekee hommii')
+                    // Tarvii nyt authoriin ID:n arvoksi, ei nimeä
+                    console.log('HEELELELELELELLELELELELEL')
+                    console.log(savedAuthor)
+                    console.log({ ...args, author: savedAuthor._id})
+                    const newBook = new Book({ ...args, author: savedAuthor._id}) // TODO TÄMÄ KUNTOON
+                    console.log(newBook)
+                    // TODO ADD book to author
+                    const savedBook = await newBook.save()
+                    return savedBook
+                } else {
+                    const newBook = new Book({ ...args })
+                    console.log(newBook)
+                    // NEED FIXING
+                    // TODO ADD book to author
+                    const savedBook = await newBook.save()
+                    return savedBook
+                }
+            } catch(error) {
+                console.log(error)
+                throw new UserInputError(error.message, {
+                    invalidArgs: args
+                })
             }
-            const newBook = { ...args, id: uuid()}
-            books = books.concat(newBook)
-            return newBook
+             // TODO AUTHORS Book linked
         },
-        editAuthor: (root, args) => {
-            const author = authors.find(a => a.name === args.name)
-            if(!author) {
-                return null
+        editAuthor: async (root, args) => {
+            try {
+                const author = await Author.findOne({ name: args.author })
+                if(author === null || author === undefined) {
+                    return null
+                }
+                const updated = { ...author, born: args.setBornTo}
+                // TODO DB SAVE
+                //authors = authors.map(a => a.name === args.name ? updated : a)
+                //return updated
+
+            } catch(error) {
+                throw new UserInputError(error.message, {
+                    invalidArgs: args
+                })
             }
-            const updated = { ...author, born: args.setBornTo}
-            authors = authors.map(a => a.name === args.name ? updated : a)
             return updated
         }
     }
