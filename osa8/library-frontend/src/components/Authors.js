@@ -1,7 +1,7 @@
   
 import React, { useState, useEffect } from 'react'
 import { useMutation } from '@apollo/client'
-import { EDIT_AUTHOR } from '../queries'
+import { EDIT_AUTHOR, ALL_AUTHORS } from '../queries'
 import Select from 'react-select'
 
 const Authors = (props) => {
@@ -9,9 +9,18 @@ const Authors = (props) => {
   const [name, setName] = useState('')
   const [born, setBorn] = useState('')
 
-  const [ editAuthor, result ] = useMutation(EDIT_AUTHOR)
-  const options = []
+  const [ editAuthor, result ] = useMutation(EDIT_AUTHOR, {
+    refetchQueries: [ {query: ALL_AUTHORS} ],
+    onError: (error) => {
+      if(error.graphQLErrors.length > 0) {
+        props.setError(error.graphQLErrors[0].message)
+      } else {
+        console.log(error)
+      }
+    }
+  })
 
+  const options = []
   Object.entries(authors).forEach(([key, value]) => {
     options.push({value: value.name, label: value.name})
   })
@@ -28,10 +37,8 @@ const Authors = (props) => {
 
   const submit = async event => {
     event.preventDefault()
-    console.log(name)
-    console.log(born)
     editAuthor({ variables: {name, setBornTo: born} })
-
+    // TODO EDITAUTHOR QUERY
     setName('')
     setBorn('')
   }
