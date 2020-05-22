@@ -3,8 +3,6 @@ const mongoose = require('mongoose')
 const Book = require('./models/book')
 const Author = require('./models/author')
 require('dotenv').config()
-//let { books, authors } = require('./data')
-//const uuid = require('uuid/v1')
 
 mongoose.set('useFindAndModify', false)
 
@@ -59,6 +57,7 @@ const typeDefs = gql`
 
 const resolvers = {
     Query: {
+        // TODO FIX COUNTS
         bookCount: () => Book.collection.countDocuments(),
         authorCount: () => Author.collection.countDocuments(),
         allBooks: (root, args) => {
@@ -94,25 +93,16 @@ const resolvers = {
         addBook: async (root, args) => {
             try {
                 const author = await Author.findOne({ name: args.author })
-                console.log(author)
+
                 if(author === null || author === undefined) {
                     const newAuthor = new Author({ name: args.author, born: null })
                     savedAuthor = await newAuthor.save()
-                    console.log('tekee hommii')
-                    // Tarvii nyt authoriin ID:n arvoksi, ei nimeä
-                    console.log('HEELELELELELELLELELELELEL')
-                    console.log(savedAuthor)
-                    console.log({ ...args, author: savedAuthor._id})
-                    const newBook = new Book({ ...args, author: savedAuthor._id}) // TODO TÄMÄ KUNTOON
-                    console.log(newBook)
-                    // TODO ADD book to author
+
+                    const newBook = new Book({ ...args, author: savedAuthor._id})
                     const savedBook = await newBook.save()
                     return savedBook
                 } else {
-                    const newBook = new Book({ ...args })
-                    console.log(newBook)
-                    // NEED FIXING
-                    // TODO ADD book to author
+                    const newBook = new Book({ ...args, author: author._id })
                     const savedBook = await newBook.save()
                     return savedBook
                 }
@@ -126,21 +116,25 @@ const resolvers = {
         },
         editAuthor: async (root, args) => {
             try {
-                const author = await Author.findOne({ name: args.author })
+                const author = await Author.findOne({ name: args.name })
+
                 if(author === null || author === undefined) {
                     return null
                 }
-                const updated = { ...author, born: args.setBornTo}
-                // TODO DB SAVE
-                //authors = authors.map(a => a.name === args.name ? updated : a)
-                //return updated
+
+                const forUpdate = {
+                    _id: author.id,
+                    name: author.name,
+                    born: args.setBornTo
+                }
+                const updated = await Author.findByIdAndUpdate(forUpdate._id, forUpdate, { new: true })
+                return updated
 
             } catch(error) {
                 throw new UserInputError(error.message, {
                     invalidArgs: args
                 })
             }
-            return updated
         }
     }
 }
