@@ -84,8 +84,9 @@ const resolvers = {
     Author: {
         // NOTE might be more sensible to do this on db side.
         bookCount: async root => {
-            const resbooks = await Book.find({})
-            return resbooks.filter(book => book.author === root.name).length
+            const allBooks = await Book.find({}) // For every author this takes all books, not ideal.
+            const filtered = allBooks.filter(book => book.author.equals(root._id))
+            return filtered.length
         }
     },
 
