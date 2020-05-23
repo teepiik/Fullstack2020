@@ -29,6 +29,12 @@ export const BOOK_COUNT = gql`
   }
 `
 
+export const AUTHOR_COUNT = gql`
+  query {
+    authorCount
+  }
+`
+
 export const CREATE_BOOK = gql`
   mutation createBook($title: String!, $author: String!, $published: Int!, $genres: [String!]!) {
     addBook(
