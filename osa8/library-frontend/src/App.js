@@ -4,7 +4,7 @@ import Authors from './components/Authors'
 import Books from './components/Books'
 import NewBook from './components/NewBook'
 import { useQuery } from '@apollo/client'
-import { ALL_AUTHORS, ALL_BOOKS } from './queries'
+import { ALL_AUTHORS, ALL_BOOKS, BOOK_COUNT } from './queries'
 
 const Notify = ({ errorMsg }) => {
   if(!errorMsg) return null
@@ -21,6 +21,13 @@ const App = () => {
 
   const authorsData = useQuery(ALL_AUTHORS)
   const booksData = useQuery(ALL_BOOKS)
+  const res = useQuery(BOOK_COUNT)
+  let totalBooks
+  if(res.data) {
+  totalBooks = res.data.bookCount
+  console.log(totalBooks)
+  }
+  
 
   const notify = (message) => {
     setErrorMsg(message)
@@ -51,6 +58,7 @@ const App = () => {
       <Books
         books={booksData.data.allBooks}
         show={page === 'books'}
+        totalBooks={totalBooks}
       />
 
       <NewBook

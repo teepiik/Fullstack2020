@@ -6,6 +6,7 @@ const Books = (props) => {
   }
 
   const books = props.books
+  const totalBooks = props.totalBooks
 
   return (
     <div>
@@ -31,6 +32,7 @@ const Books = (props) => {
           )}
         </tbody>
       </table>
+      <p>Total books count: {totalBooks}</p>
     </div>
   )
 }

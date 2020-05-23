@@ -35,10 +35,11 @@ const Authors = (props) => {
     return null
   }
 
+  console.log('Authors: ', authors )
+
   const submit = async event => {
     event.preventDefault()
     editAuthor({ variables: {name, setBornTo: born} })
-    // TODO EDITAUTHOR QUERY
     setName('')
     setBorn('')
   }
