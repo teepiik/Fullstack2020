@@ -72,10 +72,10 @@ const resolvers = {
             if(args.author) {
                 return books.filter(book => book.author === args.author)
             }
-
+            */
             if(args.genre) {
-                return books.filter(book => book.genres.includes(args.genre))
-            }*/
+                return Book.find({}).filter(book => book.genres.includes(args.genre))
+            }
 
             return Book.find({})
         },
@@ -113,7 +113,6 @@ const resolvers = {
                     invalidArgs: args
                 })
             }
-             // TODO AUTHORS Book linked
         },
         editAuthor: async (root, args) => {
             try {
