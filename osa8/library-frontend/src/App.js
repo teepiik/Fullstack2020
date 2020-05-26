@@ -3,6 +3,7 @@ import React, { useState } from 'react'
 import Authors from './components/Authors'
 import Books from './components/Books'
 import NewBook from './components/NewBook'
+import LoginForm from './components/LoginForm'
 import { useQuery } from '@apollo/client'
 import { ALL_AUTHORS, ALL_BOOKS, BOOK_COUNT } from './queries'
 
@@ -18,22 +19,35 @@ const Notify = ({ errorMsg }) => {
 const App = () => {
   const [page, setPage] = useState('authors')
   const [errorMsg, setErrorMsg] = useState(null)
+  const [token, setToken] = useState(null)
 
   const authorsData = useQuery(ALL_AUTHORS)
   const booksData = useQuery(ALL_BOOKS)
+
   const res = useQuery(BOOK_COUNT)
   let totalBooks
   if(res.data) {
   totalBooks = res.data.bookCount
-  console.log(totalBooks)
   }
-  
 
   const notify = (message) => {
     setErrorMsg(message)
     setTimeout(() => {
       setErrorMsg(null)
     }, 10000)
+  }
+
+  if(!token) {
+    return (
+      <div>
+        <Notify errorMsg={errorMsg} />
+        <h2>Login</h2>
+        <LoginForm
+          setError={notify}
+          setToken={setToken}
+        />
+      </div>
+    )
   }
 
   if (authorsData.loading || booksData.loading)  {
