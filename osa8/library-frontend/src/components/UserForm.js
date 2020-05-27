@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react'
 import { useMutation } from '@apollo/client'
-import { LOGIN } from '../queries'
+import { CREATE_USER } from '../queries'
 
-const LoginForm = ({ setError, setToken }) => {
+const UserForm = ({ setError }) => {
     const [ username, setUsername ] = useState('')
-    const [ password, setPassword ] = useState('')
+    const [ favoriteGenre, setFavoriteGenre ] = useState('')
 
-    const [ login, result ] = useMutation(LOGIN, {
+    const [ create, result ] = useMutation(CREATE_USER, {
         onError: (error) => {
             if(error.graphQLErrors.length > 0) {
                 setError(error.graphQLErrors[0].message)
@@ -18,18 +18,15 @@ const LoginForm = ({ setError, setToken }) => {
 
     useEffect(() => {
         if(result.data) {
-            const token = result.data.login.value
-            setToken(token)
-            localStorage.setItem('user-token', token)
+            console.log(result.data)
         }
     }, [result.data]) // eslint-disable-line
 
     const submit = async (event) => {
         event.preventDefault()
-        login({ variables: { username, password }})
+        create({ variables: { username, favoriteGenre }})
     }
 
-    // CONTINUE HERE, TODO LOGINFORM, createUser form + functionality etc.
     return (
         <div>
             <form onSubmit={submit}>
@@ -41,17 +38,16 @@ const LoginForm = ({ setError, setToken }) => {
                     />
                 </div>
                 <div>
-                    password
+                    favoriteGenre
                     <input
-                        type='password'
-                        value={password}
-                        onChange={({ target }) => setPassword(target.value)}
+                        value={favoriteGenre}
+                        onChange={({ target }) => setFavoriteGenre(target.value)}
                     />
                 </div>
-                <button type='submit'>login</button>
+                <button type='submit'>create</button>
             </form>            
         </div>
     )
 }
 
-export default LoginForm
+export default UserForm

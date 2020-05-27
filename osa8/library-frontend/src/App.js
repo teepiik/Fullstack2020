@@ -4,7 +4,8 @@ import Authors from './components/Authors'
 import Books from './components/Books'
 import NewBook from './components/NewBook'
 import LoginForm from './components/LoginForm'
-import { useQuery } from '@apollo/client'
+import UserForm from './components/UserForm'
+import { useQuery, useApolloClient } from '@apollo/client'
 import { ALL_AUTHORS, ALL_BOOKS, BOOK_COUNT } from './queries'
 
 const Notify = ({ errorMsg }) => {
@@ -20,6 +21,7 @@ const App = () => {
   const [page, setPage] = useState('authors')
   const [errorMsg, setErrorMsg] = useState(null)
   const [token, setToken] = useState(null)
+  const client = useApolloClient()
 
   const authorsData = useQuery(ALL_AUTHORS)
   const booksData = useQuery(ALL_BOOKS)
@@ -46,12 +48,21 @@ const App = () => {
           setError={notify}
           setToken={setToken}
         />
+        <UserForm
+          setError={notify}
+        />
       </div>
     )
   }
 
   if (authorsData.loading || booksData.loading)  {
     return <div>loading...</div>
+  }
+
+  const logout = () => {
+    setToken(null)
+    localStorage.clear()
+    client.resetStore()
   }
 
   return (
@@ -61,6 +72,7 @@ const App = () => {
         <button onClick={() => setPage('authors')}>authors</button>
         <button onClick={() => setPage('books')}>books</button>
         <button onClick={() => setPage('add')}>add book</button>
+        <button onClick={logout}>logout</button>
       </div>
 
       <Authors

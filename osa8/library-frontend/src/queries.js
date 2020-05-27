@@ -73,7 +73,7 @@ export const LOGIN = gql`
 
 export const CREATE_USER = gql`
   mutation createUser($username: String!, $favoriteGenre: String!) {
-    editAuthor( username: $username, favoriteGenre: $favoriteGenre ) {
+    createUser( username: $username, favoriteGenre: $favoriteGenre ) {
       username
       favoriteGenre
     }

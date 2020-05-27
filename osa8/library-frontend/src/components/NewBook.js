@@ -68,7 +68,7 @@ const NewBook = (props) => {
           <input
             type='number'
             value={published}
-            onChange={({ target }) => setPublished(parseInt(target.value))} // error, not int
+            onChange={({ target }) => setPublished(parseInt(target.value))}
           />
         </div>
         <div>
