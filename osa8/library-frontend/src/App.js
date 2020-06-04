@@ -8,6 +8,8 @@ import UserForm from './components/UserForm'
 import { useQuery, useApolloClient } from '@apollo/client'
 import { ALL_AUTHORS, ALL_BOOKS, BOOK_COUNT } from './queries'
 
+// Test new connection
+
 const Notify = ({ errorMsg }) => {
   if(!errorMsg) return null
   return (
