@@ -1,0 +1,19 @@
+{
+  "name": "bmicalculator",
+  "version": "1.0.0",
+  "description": "Fullstack course",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "ts-node": "ts-node",
+    "calculateBmi": "ts-node calculateBmi.ts",
+    "calculateExercises": "ts-node calculateExercises.ts"
+  },
+  "author": "teepiik",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^14.0.11",
+    "ts-node": "^8.10.2",
+    "typescript": "^3.9.5"
+  }
+}
