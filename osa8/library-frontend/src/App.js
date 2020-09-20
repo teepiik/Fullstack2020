@@ -41,9 +41,13 @@ const App = () => {
     }, 10000)
   }
 
+  const containerStyle = {
+    margin: '3rem'
+  }
+
   if(!token) {
     return (
-      <div>
+      <div style={containerStyle}>
         <Notify errorMsg={errorMsg} />
         <h2>Login</h2>
         <LoginForm
@@ -68,7 +72,7 @@ const App = () => {
   }
 
   return (
-    <div>
+    <div style={containerStyle}>
       <Notify errorMsg={errorMsg} />
       <div>
         <button onClick={() => setPage('authors')}>authors</button>
