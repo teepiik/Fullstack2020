@@ -11,6 +11,18 @@ export const ALL_BOOKS = gql`
     }
   }
 `
+/* TODO 8.21, if time */
+export const ALL_BOOKS_GENREFILT = gql`
+  query allBooksByGenre($filter: String!) {
+    allBooks(genre: $filter) {
+      title
+      author
+      published
+      genres
+      id
+    }
+  }
+`
 
 export const ALL_AUTHORS = gql`
   query {
