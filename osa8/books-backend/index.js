@@ -81,7 +81,7 @@ const resolvers = {
     Query: {
         bookCount: () => Book.collection.countDocuments(),
         authorCount: () => Author.collection.countDocuments(),
-        allBooks: (root, args) => {
+        allBooks: async (root, args) => {
             /*
             Some filters Disabled
             if(args.author && args.genre) {
@@ -95,7 +95,9 @@ const resolvers = {
             }
             */
             if(args.genre) {
-                return Book.find({}).filter(book => book.genres.includes(args.genre))
+                //return Book.find({}).filter(book => book.genres.includes(args.genre))
+                const books = await Book.find({})
+                return books.filter(book => book.genres.includes(args.genre))
             }
 
             return Book.find({})
