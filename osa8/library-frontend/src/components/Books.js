@@ -12,8 +12,6 @@ const Books = (props) => {
     );
   });
 
-  console.log(filters);
-
   if (!props.show) {
     return null;
   }

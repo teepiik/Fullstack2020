@@ -1,12 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Authors from './components/Authors';
 import Books from './components/Books';
 import NewBook from './components/NewBook';
 import LoginForm from './components/LoginForm';
 import UserForm from './components/UserForm';
 import Recommendations from './components/Recommendations';
-import { useQuery, useApolloClient } from '@apollo/client';
-import { ALL_AUTHORS, ALL_BOOKS, BOOK_COUNT } from './queries';
+import { useQuery, useLazyQuery, useApolloClient } from '@apollo/client';
+import {
+  ALL_AUTHORS,
+  ALL_BOOKS,
+  BOOK_COUNT,
+  ALL_BOOKS_GENREFILT,
+} from './queries';
 
 const Notify = ({ errorMsg }) => {
   if (!errorMsg) return null;
@@ -17,16 +22,33 @@ const App = () => {
   const [page, setPage] = useState('authors');
   const [errorMsg, setErrorMsg] = useState(null);
   const [token, setToken] = useState(null);
+  const [user, setUser] = useState(null);
   const client = useApolloClient();
 
   const authorsData = useQuery(ALL_AUTHORS);
   const booksData = useQuery(ALL_BOOKS);
+  const [allBooksByGenre, result] = useLazyQuery(ALL_BOOKS_GENREFILT);
 
   const res = useQuery(BOOK_COUNT);
   let totalBooks;
   if (res.data) {
     totalBooks = res.data.bookCount;
   }
+
+  const fetch = (genre) => {
+    console.log(genre);
+    allBooksByGenre({ variables: { genre: genre } });
+  };
+
+  useEffect(() => {
+    console.log('user')
+    console.log(user);
+    fetch(user ? user.favoriteGenre : '');
+    if (result.data) {
+      console.log('result data')
+      console.log(result.data);
+    }
+  }, [user]);
 
   const notify = (message) => {
     setErrorMsg(message);
@@ -44,7 +66,7 @@ const App = () => {
       <div style={containerStyle}>
         <Notify errorMsg={errorMsg} />
         <h2>Login</h2>
-        <LoginForm setError={notify} setToken={setToken} />
+        <LoginForm setError={notify} setToken={setToken} setUser={setUser} />
         <UserForm setError={notify} />
       </div>
     );
@@ -83,9 +105,10 @@ const App = () => {
         books={booksData.data.allBooks}
         show={page === 'books'}
         totalBooks={totalBooks}
+        notify={notify}
       />
 
-      <Recommendations show={page === 'recommendations'} />
+      <Recommendations show={page === 'recommendations'} notify={notify} />
 
       <NewBook show={page === 'add'} setError={notify} />
     </div>

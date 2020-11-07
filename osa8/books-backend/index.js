@@ -45,6 +45,7 @@ const typeDefs = gql`
 
     type Token {
         value: String!
+        user: User
     }
 
     type Query {
@@ -95,7 +96,6 @@ const resolvers = {
             }
             */
             if(args.genre) {
-                //return Book.find({}).filter(book => book.genres.includes(args.genre))
                 const books = await Book.find({})
                 return books.filter(book => book.genres.includes(args.genre))
             }
@@ -103,7 +103,7 @@ const resolvers = {
             return Book.find({})
         },
         allAuthors: () => { return Author.find({})},
-        me: (root, args, context) => {
+        me: async(root, args, context) => {
             return context.currentUser
         }
     },
@@ -194,7 +194,7 @@ const resolvers = {
                 id: user._id
             }
 
-            return { value: jwt.sign(userForToken, JWT_SECRET) }
+            return { value: jwt.sign(userForToken, JWT_SECRET), user: user}
         }
     }
 }

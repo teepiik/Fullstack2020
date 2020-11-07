@@ -1,4 +1,4 @@
-import { gql } from '@apollo/client'
+import { gql } from '@apollo/client';
 
 export const ALL_BOOKS = gql`
   query {
@@ -10,11 +10,11 @@ export const ALL_BOOKS = gql`
       id
     }
   }
-`
-/* TODO 8.21, if time */
+`;
+
 export const ALL_BOOKS_GENREFILT = gql`
-  query allBooksByGenre($filter: String!) {
-    allBooks(genre: $filter) {
+  query($genre: String!) {
+    allBooks(genre: $genre) {
       title
       author
       published
@@ -22,7 +22,7 @@ export const ALL_BOOKS_GENREFILT = gql`
       id
     }
   }
-`
+`;
 
 export const ALL_AUTHORS = gql`
   query {
@@ -33,26 +33,41 @@ export const ALL_AUTHORS = gql`
       id
     }
   }
-`
+`;
+
+export const GET_USER = gql`
+  query {
+    me {
+      username
+      favoriteGenre
+      id
+    }
+  }
+`;
 
 export const BOOK_COUNT = gql`
   query {
     bookCount
   }
-`
+`;
 
 export const AUTHOR_COUNT = gql`
   query {
     authorCount
   }
-`
+`;
 
 export const CREATE_BOOK = gql`
-  mutation createBook($title: String!, $author: String!, $published: Int!, $genres: [String!]!) {
+  mutation createBook(
+    $title: String!
+    $author: String!
+    $published: Int!
+    $genres: [String!]!
+  ) {
     addBook(
-      title: $title,
-      author: $author,
-      published: $published,
+      title: $title
+      author: $author
+      published: $published
       genres: $genres
     ) {
       title
@@ -62,32 +77,36 @@ export const CREATE_BOOK = gql`
       id
     }
   }
-`
+`;
 
 export const EDIT_AUTHOR = gql`
   mutation editAuthor($name: String!, $setBornTo: Int!) {
-    editAuthor( name: $name, setBornTo: $setBornTo ) {
+    editAuthor(name: $name, setBornTo: $setBornTo) {
       name
       born
       bookCount
       id
     }
   }
-`
+`;
 
 export const LOGIN = gql`
   mutation login($username: String!, $password: String!) {
-    login( username: $username, password: $password ) {
+    login(username: $username, password: $password) {
       value
+      user {
+        username
+        favoriteGenre
+      }
     }
   }
-`
+`;
 
 export const CREATE_USER = gql`
   mutation createUser($username: String!, $favoriteGenre: String!) {
-    createUser( username: $username, favoriteGenre: $favoriteGenre ) {
+    createUser(username: $username, favoriteGenre: $favoriteGenre) {
       username
       favoriteGenre
     }
   }
-`
+`;
