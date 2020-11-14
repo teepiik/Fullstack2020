@@ -1,1 +1,0 @@
-// TODO Exercises considering this
